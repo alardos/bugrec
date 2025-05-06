@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+	<script src="main.js" type="text/javascript"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+		let editing = false;
+        getRecord(params.get('id')).then(record => {
+            document.getElementById('description').innerHTML = record.description;
+            document.getElementById('original_balance').innerHTML = record.original_balance;
+            document.getElementById('sum').innerHTML = record.sum;
+            document.getElementById('new_balance').innerHTML = (Number.parseInt(record.original_balance) + Number.parseInt(record.sum));
+				document.getElementById('note').innerHTML = record.note;
+				document.getElementById('note_input').value = record.note;
+				document.getElementById('edit').addEventListener("click", (e) => {
+						let block = document.getElementById('edit_block');
+
+						if (editing) block.style["visibility"] = "hidden";
+						else block.style["visibility"] = "visible";
+						
+						editing = !editing;
+				});
+            
+            getPartner(record.partner_id).then(partner => {
+                document.getElementById("partner").innerHTML = '<p >' + partner.name +'</p>'
+                document.getElementById("partner").setAttribute('href', window.location.protocol+ '//'+window.location.host + '/partner?id=' + record.partner_id)  
+            })
+        });
+        
+    </script>
+    <style>
+        span {
+            display: inline;
+            margin: auto;
+        }
+
+        #description {
+            font-weight: bold;
+        }
+
+		#edit_block {
+				visibility: hidden;
+		}
+
+        #main {
+            width: 50%;
+            margin: auto;
+            background-color: antiquewhite;
+            padding: 3em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <p id="description"></p>
+		<p id="note"></p>
+        <span id="original_balance"></span>
+        <span> + </span>
+        <span id="sum"></span>
+        <span> = </span>
+        <span id="new_balance"></span>
+        <a id="partner"></a>
+		<button id="edit">Edit</button>
+    </div>
+	<div id="edit_block">
+			<input id="note_input" type="text">
+	</div>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="main.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        body {
+            box-sizing:content-box;
+        }
+        th, td {
+            width: 200px;
+            text-align: center; 
+            vertical-align: middle;
+            background-color: lightgrey;
+        }
+        input, select {
+            text-align: center; 
+            vertical-align: middle;
+            background-color: lightgrey;
+            width: 100%;
+            height: 2em;
+            margin: 0;
+            padding: 0 0 0 0;
+            border: 0;
+        }
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .new-category {
+            width: 200px;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+    <h1>Income</h1>
+    <table>
+        <tr>
+            <th></th>
+            <th class="sum" id="sum-1"></th>
+            <th class="sum" id="sum-2"></th>
+            <th class="sum" id="sum-3"></th>
+            <th class="sum" id="sum-4"></th>
+            <th class="sum" id="sum-5"></th>
+            <th class="sum" id="sum-6"></th>
+            <th class="sum" id="sum-7"></th>
+            <th class="sum" id="sum-8"></th>
+            <th class="sum" id="sum-9"></th>
+            <th class="sum" id="sum-10"></th>
+            <th class="sum" id="sum-11"></th>
+            <th class="sum" id="sum-12"></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>January</th>
+            <th>February</th>
+            <th>March</th>
+            <th>April</th>
+            <th>May</th>
+            <th>Jun</th>
+            <th>July</th>
+            <th>August</th>
+            <th>September</th>
+            <th>October</th>
+            <th>November</th>
+            <th>December</th>
+        </tr>
+        {% for category in income_rows %}
+            <tr>
+                <td><input disabled id="income-{{category.id}}-name" value="{{category.name}}"></td>
+                <td><input type="number" id="income-{{category.id}}-1" value="{{category.months.jan}}"></td>
+                <td><input type="number" id="income-{{category.id}}-2" value="{{category.months.feb}}"></td>
+                <td><input type="number" id="income-{{category.id}}-3" value="{{category.months.mar}}"></td>
+                <td><input type="number" id="income-{{category.id}}-4" value="{{category.months.apr}}"></td>
+                <td><input type="number" id="income-{{category.id}}-5" value="{{category.months.may}}"></td>
+                <td><input type="number" id="income-{{category.id}}-6" value="{{category.months.jun}}"></td>
+                <td><input type="number" id="income-{{category.id}}-7" value="{{category.months.jul}}"></td>
+                <td><input type="number" id="income-{{category.id}}-8" value="{{category.months.aug}}"></td>
+                <td><input type="number" id="income-{{category.id}}-9" value="{{category.months.sep}}"></td>
+                <td><input type="number" id="income-{{category.id}}-10" value="{{category.months.oct}}"></td>
+                <td><input type="number" id="income-{{category.id}}-11" value="{{category.months.nov}}"></td>
+                <td><input type="number" id="income-{{category.id}}-12" value="{{category.months.dec}}"></td>
+            </tr>
+        {% endfor %}
+        <input class="new-category" id="new-income-category" name="name">
+        <button hx-post="/category/create?type=income" hx-include="[id='new-income-category']">create</button>
+    </table>
+    
+    <h1>Expense</h1>
+    <table>
+        <tr>
+            <th></th>
+            <th>January</th>
+            <th>February</th>
+            <th>March</th>
+            <th>April</th>
+            <th>May</th>
+            <th>Jun</th>
+            <th>July</th>
+            <th>August</th>
+            <th>September</th>
+            <th>October</th>
+            <th>November</th>
+            <th>December</th>
+        </tr>
+        {% for category in expense_rows %}
+            <tr>
+                <td><input disabled id="expense-{{category.id}}-name" value="{{category.name}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-1" value="{{category.months.jan}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-2" value="{{category.months.feb}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-3" value="{{category.months.mar}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-4" value="{{category.months.apr}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-5" value="{{category.months.may}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-6" value="{{category.months.jun}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-7" value="{{category.months.jul}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-8" value="{{category.months.aug}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-9" value="{{category.months.sep}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-10" value="{{category.months.oct}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-11" value="{{category.months.nov}}"></td>
+                <td><input type="number" id="expense-{{category.id}}-12" value="{{category.months.dec}}"></td>
+            </tr>
+        {% endfor %}
+        <input class="new-category" id="new-expense-category" name="name">
+        <button hx-post="/category/create"  hx-include="[id='new-expense-category']" hx-push-url="true">create</button>
+    </table>
+
+    <h1>Saving</h1>
+    <table>
+        <tr>
+            <th></th>
+            <th>January</th>
+            <th>February</th>
+            <th>March</th>
+            <th>April</th>
+            <th>May</th>
+            <th>Jun</th>
+            <th>July</th>
+            <th>August</th>
+            <th>September</th>
+            <th>October</th>
+            <th>November</th>
+            <th>December</th>
+        </tr>
+        {% for category in saving_rows %}
+            <tr>
+                <td><input disabled id="saving-{{category.id}}-name" value="{{category.name}}" ></td>
+                <td><input type="number" id="saving-{{category.id}}-1" value="{{category.months.jan}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-2" value="{{category.months.feb}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-3" value="{{category.months.mar}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-4" value="{{category.months.apr}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-5" value="{{category.months.may}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-6" value="{{category.months.jun}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-7" value="{{category.months.jul}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-8" value="{{category.months.aug}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-9" value="{{category.months.sep}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-10" value="{{category.months.oct}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-11" value="{{category.months.nov}}"></td>
+                <td><input type="number" id="saving-{{category.id}}-12" value="{{category.months.dec}}"></td>
+            </tr>
+        {% endfor %}
+        <input class="new-category" id="new-saving-category" name="name">
+        <button hx-post="/category/create?type=saving" hx-include="[id='new-saving-category']">create</button>
+    </table>
+</body>
+<script>
+    function accumulateForMonth(month_id) {
+        const inputs = document.querySelectorAll('input');
+
+        let sum = 0;
+        for (input of inputs) {
+            const s = input.id.split('-');
+            if (s[2] !== month_id) continue;
+            if (s[2] === 'name') continue;
+
+            if (s[0] === 'income') {
+                sum += Number(input.value);
+            } else {
+                sum -= Number(input.value);
+            }
+            console.log(sum);
+        }
+        return sum;
+    }
+
+    var inputs = document.querySelectorAll('input');
+    for (const input of inputs) {
+        input.addEventListener('change', (e) => {
+            const s = input.id.split('-');
+            const sum = document.getElementById('sum-'+s[2]);
+            console.log(sum);
+            console.log(s[0],s[1],s[2], input.value);
+            sum.innerHTML = String(accumulateForMonth(s[2])).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            updatePlan({
+                category_id:Number(s[1]),
+                year:2024,
+                month_id:Number(s[2]),
+                amount:Number(input.value)
+            });
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="main.js" type="text/javascript"></script>
+    <script>
+    function buildListItem(purchase, partner, item) {
+        return '<div class="list-item"><div>' +
+                    '<p class="name">' +
+                        '<a href="/partner?id='+partner.id+'"><span class="partner-name">'+partner.name+'</span></a>'+
+                        ' - ' +
+                        '<span class="item-name">'+item.name+'</span>' +
+                    '</p>' +
+                    '<p class="date">'+new Date(Number(purchase.time)).toDateString()+'</p>' +
+                    '<p class="sum">'+purchase.sum+'Ft</p>' +
+                '</div></div>';
+    }
+
+    getPurchases().then(async purchases => {
+        let items = getItems();
+        let partners = getPartners();
+        
+        items = await items;
+        partners = await partners;
+        for (purchase of purchases) {
+            console.log(purchase);
+            const partner = partners.find(partner => partner.id === purchase.partner_id);
+            const item = items.find(item => item.id === purchase.item_id);
+            document.getElementById("list").innerHTML += buildListItem(purchase, partner, item);
+        }
+
+    })
+    </script>
+    <style>
+        .list-item {
+            margin: 0.2em;
+            border-radius: 0.5em;
+            border: solid 2px lightgray;
+            padding: 0.5em;
+            /* height: 10vh; */
+            width: 50vw;
+            margin: auto;
+            margin-top: 0.5em;
+        }
+        .list-item div {
+            width: 100%;
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .list-item p {
+            margin: 0;
+        }
+
+        .sum { 
+            flex: 1;
+            align-self: flex-end; 
+            text-align: right;
+        }
+        .date {
+            flex: 2;
+            text-align: center;
+        }
+        .name { 
+            flex: 6;
+        }
+        .name .item-name {
+            color: lightcoral; 
+        }
+        .name .partner-name {
+            color: lightsalmon; 
+        }
+        a {
+            text-decoration: none;
+        }
+        h1 {
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="nav"></div>
+
+    <h1>Purchases</h1>
+    <div id="main">
+        <div id="list"></div>
+    </div>
+</body>
+<script>
+    getNavHtml().then(html => nav.innerHTML = html);
+</script>
+</html>

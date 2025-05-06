@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+	<script src="main.js" type="text/javascript"></script>
+    <script>
+		let editing = false;
+        const itemId = new URLSearchParams(window.location.search).get('id')
+        getItem(itemId).then(update);
+
+        function update(item) {
+            document.getElementById("img").src = item.picture_url;
+            document.getElementById("name").innerHTML = item.name;
+            document.getElementById("bar-code").innerHTML = item.bar_code;
+            const implicitTagContainer = document.getElementById("implicit-tag-container");
+            const explicitTagContainer = document.getElementById("explicit-tag-container");
+
+
+            for (tag of item.explicitTags.filter(t=>t.name!=="item")) {
+                explicitTagContainer.innerHTML += '<span class="tag">'+tag.name+'</span>'
+            }
+
+            for (tag of item.implicitTags.filter(t=>t.name!=="item")) {
+                implicitTagContainer.innerHTML += '<span class="tag">'+tag.name+'</span>'
+            }
+        }
+        
+    </script>
+    <style>
+        span {
+            display: inline;
+            margin: auto;
+        }
+
+		#edit_block {
+				visibility: hidden;
+		}
+
+        #main {
+            width: 50%;
+            margin: auto;
+            background-color: antiquewhite;
+            padding: 3em;
+            text-align: center;
+        }
+        #implicit-tag-container, #explicit-tag-container {
+            display: flex;
+            margin: 1em;
+            gap: 10px;
+            justify-content: baseline;
+        }
+
+        .tag {
+            flex: 1;
+            display: inline-block;
+            border: 0;
+            border-radius: 15px;
+            background-color: aqua;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="nav"></div>
+
+    <div id="main">
+        <img id="img">
+        <span id="name"></span>
+        <span id="bar-code"></span>
+        <div id="tag-container">
+            <div id="explicit-tag-container"></div>
+            <div id="implicit-tag-container"></div>
+        </div>
+        <select id="add-tag-select"></select>
+        <button id="add-tag-button">Add tag</button>
+    </div>
+</body>
+
+<script>
+    getNavHtml().then(html => nav.innerHTML = html);
+    document.getElementById("add-tag-button").addEventListener("click", () => {
+        postAssignTagToItem(addTagSelect.value, itemId);
+        getItem(itemId).then(update);
+    })
+    const addTagSelect = document.getElementById("add-tag-select");
+    getTags().then(tags => addTagSelect.innerHTML = tags.map(t => '<option value="'+t.id+'">'+t.name+'</option>').join(""));
+</script>
+</html>

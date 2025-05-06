@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Partners</title>
+	<script src="main.js" type="text/javascript"></script>
+	<script>
+		getBalance().then(balance => document.getElementById('balance').innerHTML = balance);
+		getRecords().then(records => {
+			console.log("recieved, records");
+			let containerElement = document.getElementById("left");
+
+			for (record of records) { console.log(record.id)
+				let item = '<a href="' + window.location + 'record?id=' + record.id +'"><div class="single-item">';
+				// item += '<span class="single-item-id">' + record.id + '</span>';
+				item += '<div class="single-item-header">';
+				if (record.note !== '') {
+						item += '<span class="single-item-desc">' + record.note + '</span>'
+				} else {
+						item += '<span class="single-item-desc">' + record.description.replace('-ÉRINTŐ','') + '</span>';
+				}
+				item += '<span class="single-item-sum">' + record.sum + '</span>';
+				item += '</div>';
+				item += '<div class="single-item-extra-info">';
+				item += '<span class="single-item-time">' + new Date(Number(record.time * 1000) - (1000 * 60*60*2)).toLocaleString("hu") + '</span>';
+				item += '<span class="single-item-from-to">' + record.original_balance + ' => ' + (Number.parseInt(record.original_balance) + Number.parseInt(record.sum)) + '</span>'
+				item += '</div></div></a>';
+				containerElement.innerHTML += item;
+			}
+		})
+
+
+	</script>
+	<style>
+		#main { 
+			display: flex;
+		}
+		#left, #right {
+			display: flex;
+			flex-direction: column;
+			color: black;
+			width: 50%;
+		}
+
+		#balance-item p, h1 {
+			margin: 0;
+		}
+
+		.single-item {
+			margin: 0.2em;
+			border-radius: 0.5em;
+			border: solid 2px lightgray;
+			padding: 0.5em;
+		}
+
+		a {
+			color: black;
+			text-decoration: none;
+		}
+
+		.single-item-header {
+			display: flex;
+			justify-content: space-between;
+			color: lightcoral;
+		}
+
+		.single-item-extra-info {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.single-item-sum {
+			/* margin-left: auto; */
+		}
+	</style>
+</head>
+
+<body>
+	<div id="nav"></div>
+
+	<h1>Transactions</h1>
+
+	<div id="main">
+		<div id="left"> </div>
+		<div id="right"> 
+			<div id="balance-item" class="single-item" style="width: 25%;">
+				<p>Balance is:</p>
+				<h1 id="balance" ></h1>
+				<form action="/api/transfer/import">
+					<input type="file">
+					<button type="submit">import</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+</body>
+
+<script>
+    getNavHtml().then(html => nav.innerHTML = html);
+
+</script>
+</html>
